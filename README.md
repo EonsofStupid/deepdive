@@ -21,7 +21,13 @@ RabbitHole/  claude/SKILL.md   codex/SKILL.md   cursor/rabbithole.md  scripts/
 Advance/     pxpipe/ · telemetry/ · hooks/ · notes/ · codex-init.sh   (the optional power layer)
 ```
 
-## Install
+## Install (10 seconds)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/EonsofStupid/deepdive/master/install.sh | bash -s claude
+```
+
+or from a checkout:
 
 ```bash
 ./install.sh claude              # → ~/.claude/skills/            (/deepdive, /rabbithole)
@@ -61,7 +67,25 @@ the skills will emit one line per transition (queueing to `${DEEPDIVE_HOME}/sign
 is busy; replay with `Advance/telemetry/drain-queue.sh`). Unset = silently skipped. `DEEPDIVE_HOME`
 defaults to `~/.deepdive`.
 
+## Demos & results — real runs, never synthetic
+
+`demos/RESULTS.md` carries the numbers with receipts: the first end-to-end codex rabbithole (two true
+`gpt-5.6-sol` forks + a provenance-tagged hybrid that authored this repo's own release gate — and caught
+4 real doc bugs on the way), the typed-telemetry drain with its two *correct rejections*, the
+OAuth-vs-API-key proxy probe evidence, and the optical-compression vetting that pinned the allowlist.
+`demos/casts/` = asciinema replays of real forked Claude sessions; `demos/codex-sessions/` = the actual
+codex session rollouts, including the sandbox-blocked attempt we kept as an edge-case receipt.
+
+## Related projects
+
+- **[TotalRecall](https://github.com/EonsofStupid/totalrecall)** (`trecall`) — our vector/recall engine
+  (a Qdrant fork being fused with a graph store into one embedded recall spine). DeepDive is the
+  workflow face of the same thesis: every conversation must reduce to durable, recallable artifacts —
+  the memories and build plans these skills force each branch to produce are exactly what that engine
+  is built to store and recall. Pre-release, moving fast, same evidence-gated discipline.
+
 ## Status
 
 Pre-release. Extracted from a working setup and generalized (env-var paths, optional proxy/telemetry);
-scripts assume a Unix box with tmux. Issues and test reports welcome — that's what this repo is for.
+scripts assume a Unix box with tmux. The release bar is `Advance/notes/TESTING.md` — authored, fittingly,
+by the first live rabbithole run. Issues and test reports welcome — that's what this repo is for.
