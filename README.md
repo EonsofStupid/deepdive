@@ -16,16 +16,18 @@ baked in as rules.
 Each skill is fully self-contained and ships in three harness flavors:
 
 ```
-deepdive/    claude/SKILL.md   cursor/deepdive.md    codex/deepdive.md    scripts/
-rabbithole/  claude/SKILL.md   cursor/rabbithole.md  codex/rabbithole.md  scripts/
+DeepDive/    claude/SKILL.md   codex/SKILL.md   cursor/deepdive.md    scripts/
+RabbitHole/  claude/SKILL.md   codex/SKILL.md   cursor/rabbithole.md  scripts/
+Advance/     pxpipe/ · telemetry/ · hooks/ · notes/ · codex-init.sh   (the optional power layer)
 ```
 
 ## Install
 
 ```bash
-./install.sh claude              # → ~/.claude/skills/        (/deepdive, /rabbithole)
-./install.sh codex               # → ~/.codex/prompts/        (/deepdive, /rabbithole)
+./install.sh claude              # → ~/.claude/skills/            (/deepdive, /rabbithole)
+./install.sh codex               # → ~/.codex/skills/             (native SKILL.md skills)
 ./install.sh cursor <project>    # → <project>/.cursor/commands/
+./install.sh advance             # → hook scripts + pointers to pxpipe/telemetry setup
 ```
 
 ## The capability line, stated honestly
@@ -34,9 +36,13 @@ rabbithole/  claude/SKILL.md   cursor/rabbithole.md  codex/rabbithole.md  script
   --fork-session`) under tmux — durable sessions where a closed window never kills work — with
   asciinema capture, idle-based completion detection, and optional
   [pxpipe](https://github.com/teamchong/pxpipe) routing for per-request token metering.
-- **Cursor / Codex** have no conversation-fork primitive. Their variants use **context-bundle
-  emulation**: the source session exports a `CONTEXT.md` (objectives, decisions, open questions) and
-  every branch/fork starts by reading it. Same workflow, weaker inheritance — documented, not disguised.
+- **Codex** (≥ 0.144) also gets **true forks — verified live**: `codex fork <session-id> "<prompt>"`
+  takes its starting prompt as an argument, `/side` gives ephemeral-fork research spurs, `/plan` +
+  `gpt-5.6-sol` (effort `ultra`) serves the terminal fold. Skills install natively to
+  `~/.codex/skills/`. Facts and edge cases: `Advance/notes/CODEX_CAPABILITIES.md`.
+- **Cursor** has no verified conversation-fork primitive here. Its variant uses **context-bundle
+  emulation**: the source exports a `CONTEXT.md` and every branch starts by reading it. Same workflow,
+  weaker inheritance — documented, not disguised.
 
 ## Hard-won rules (all learned the expensive way)
 
@@ -52,7 +58,7 @@ rabbithole/  claude/SKILL.md   cursor/rabbithole.md  codex/rabbithole.md  script
 
 Set `DEEPDIVE_SIGNAL_CMD` to any CLI that accepts lifecycle events (`branch_opened … crystallized`) and
 the skills will emit one line per transition (queueing to `${DEEPDIVE_HOME}/signal.queue` when the sink
-is busy; replay with `deepdive/scripts/drain-queue.sh`). Unset = silently skipped. `DEEPDIVE_HOME`
+is busy; replay with `Advance/telemetry/drain-queue.sh`). Unset = silently skipped. `DEEPDIVE_HOME`
 defaults to `~/.deepdive`.
 
 ## Status
