@@ -45,7 +45,11 @@ The ones that matter for DeepDive/RabbitHole:
 - OAuth-through-proxy probe (custom provider, no `env_key` → header inspection).
 - Worktree/cwd behavior of `/fork` + `codex fork` (does a fork share the filesystem? — presumed yes,
   same as Claude Code; verify during the live contract tests).
-- Live contract tests: one 2-topic `/deepdive`, one 2-fork `/rabbithole`.
+- Live contract tests: one 2-topic `/deepdive`, one multi-fork `/rabbithole` — **on real pending work
+  from the operator's own backlog, never invented questions** (a test that isn't also real work doesn't
+  qualify; results must be facts about the operator's system on the operator's data).
+- Session storage (verified): `~/.codex/sessions/YYYY/MM/DD/rollout-<ts>-<uuid>.jsonl` — the uuid is the
+  session id `codex fork`/`resume` take; newest session = `ls -t` over that tree.
 
 ## Model tiers + "Ultra" (researched 2026-07-14, primary sources; live-REPL confirmation pending auth)
 
@@ -76,3 +80,14 @@ An earlier draft of the codex skill variants assumed **no fork primitive** and p
 emulation. **Wrong** — `codex fork` is native. The codex variants are therefore authored against true
 forking (V2), with context-bundle retained only for the Cursor variant (still unverified there — see
 TESTING.md).
+
+## Proxy probe RESULTS (2026-07-14, live header-dump evidence — the conflict is settled)
+
+- **API-key mode → custom provider: VERIFIED WORKING.** `model_providers.<id>.base_url` +
+  `wire_api="responses"` + `env_key` → requests arrive at the override URL with
+  `Authorization: Bearer <key>` (observed: `GET /v1/models`, originator `codex_exec/0.144.4`).
+- **ChatGPT-OAuth mode → custom provider: DOES NOT FLOW.** Same config minus `env_key`: codex sends
+  NOTHING to the override URL (stalls). The headroom-#773 "no-env_key trick" fails on 0.144.4.
+- ⇒ pxpipe can meter codex **only under API-key (platform) billing**. Subscription/plan codex is
+  unmeterable at the proxy seam today; use codex-native accounting instead (`/usage`,
+  `/status`, and per-session token data in `~/.codex/sessions/**/rollout-*.jsonl`).

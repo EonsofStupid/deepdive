@@ -33,11 +33,14 @@ install_claude() {
 }
 
 install_codex() {
-  mkdir -p "$HOME/.codex/prompts"
+  mkdir -p "$HOME/.codex/skills"
   for s in deepdive rabbithole; do
-    cp "${DIRS[$s]}/codex/$s.md" "$HOME/.codex/prompts/$s.md"
-    echo "codex: installed /$s (~/.codex/prompts/$s.md)"
+    rm -rf "$HOME/.codex/skills/$s"
+    mkdir -p "$HOME/.codex/skills/$s"
+    cp "${DIRS[$s]}/codex/SKILL.md" "$HOME/.codex/skills/$s/SKILL.md"
+    echo "codex: installed skill $s (~/.codex/skills/$s/ — native SKILL.md, verified codex >= 0.144)"
   done
+  cp Advance/codex-init.sh "$HOME/.codex/skills/" 2>/dev/null || true
 }
 
 install_cursor() {
