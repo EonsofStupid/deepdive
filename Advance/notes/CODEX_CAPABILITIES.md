@@ -16,13 +16,35 @@ box, not quoted from docs. Items marked ⏳ need an authenticated session and ar
 | **MCP** | `codex mcp` + `codex mcp-server` | present |
 | **Health** | `codex doctor`, `codex login status` | ✅ used here |
 
-## Pending auth (⏳ verify in-REPL after `codex login`)
+## In-REPL surface (✅ VERIFIED live, ChatGPT-authed, 2026-07-14 — full `/` popup walked)
 
-- In-REPL slash commands: `/plan`, side/background chat (`/btw`-equivalent), in-session fork/agent
-  spawning — enumerate via `/help`.
-- Custom prompts mechanism (`~/.codex/prompts/*.md` → `/name`) — confirm dir + invocation syntax on
-  this version before install.sh relies on it.
-- `AGENTS.md` handling; worktree behavior on fork/exec (does a fork share cwd? sandbox interplay).
+Complete command list captured: `/agent /approve /archive /compact /copy /delete /diff /exit
+/experimental /fast /feedback /fork /goal /hooks /ide /import /init /keymap /logout /mcp /memories
+/mention /model /new /permissions /pets /plan /plugins /ps /raw /rename /resume /review /side /skills
+/statusline /status /theme /title /usage /vim`
+
+The ones that matter for DeepDive/RabbitHole:
+- **`/fork`** — fork the current chat, in-session. **`/side`** — "a side conversation in an ephemeral
+  fork" (research spurs!). **`/plan`** — Plan mode. **`/agent`** — switch active agent thread.
+  **`/goal`** — long-running task goal. **`/hooks`** — lifecycle hooks exist. **`/memories`** — native
+  memory config. **`/compact`**, `/status`, `/usage`.
+- **`/import`** — "import setup, this project, and recent chats **from Claude Code**" (migration path).
+- Default model on this account: **`gpt-5.6-sol`** (banner-confirmed); `/model` picks model + reasoning
+  effort (Ultra tier per the models doc). `codex exec` sanity round-trip: ✅ (1,795 tokens).
+- **Skills are NATIVE and SKILL.md-format**: `~/.codex/skills/<name>/SKILL.md` with `name:` /
+  `description:` / `metadata.short-description` frontmatter (system skills incl. skill-creator,
+  skill-installer ship in `~/.codex/skills/.system/`). ⇒ deepdive/rabbithole install as REAL codex
+  skills, not prompt files.
+- Feature flags (`codex features`): `browser_use`/`computer_use`/`code_mode_host`/`fast_mode`/`goals`
+  stable; `enable_fanout`/`artifact`/`chronicle` under development.
+- Linux sandbox note: warns it wants bubblewrap user-namespaces on this box (exec still worked).
+
+## Still pending (⏳)
+
+- Ultra effort picker exercised live (+ its usage-limit behavior on this plan).
+- OAuth-through-proxy probe (custom provider, no `env_key` → header inspection).
+- Worktree/cwd behavior of `/fork` + `codex fork` (does a fork share the filesystem? — presumed yes,
+  same as Claude Code; verify during the live contract tests).
 - Live contract tests: one 2-topic `/deepdive`, one 2-fork `/rabbithole`.
 
 ## Model tiers + "Ultra" (researched 2026-07-14, primary sources; live-REPL confirmation pending auth)
