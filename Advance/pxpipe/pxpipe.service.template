@@ -6,6 +6,12 @@ After=network.target
 ExecStart=@NPX@ -y pxpipe-proxy
 Environment=PATH=@NODE_BIN_DIR@:/usr/bin:/bin
 Environment=PORT=@PORT@
+# Explicit imaging allowlist — NEVER rely on the default (it has drifted across versions, and the
+# matcher family-matches suffixes: a bare `gpt-5.6` entry would image `gpt-5.6-sol`, which is a
+# measured double-loss: 0/15 verbatim recall + ~32% HIGHER token cost on the OpenAI lane).
+# Fable is the only model with strong measured imaged-text recall. Metering works for ALL models
+# regardless of this list — non-listed traffic passes through untouched but fully ledgered.
+Environment=PXPIPE_MODELS=claude-fable-5
 Restart=on-failure
 RestartSec=3
 

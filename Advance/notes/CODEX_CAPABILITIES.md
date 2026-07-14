@@ -25,6 +25,29 @@ box, not quoted from docs. Items marked ⏳ need an authenticated session and ar
 - `AGENTS.md` handling; worktree behavior on fork/exec (does a fork share cwd? sandbox interplay).
 - Live contract tests: one 2-topic `/deepdive`, one 2-fork `/rabbithole`.
 
+## Model tiers + "Ultra" (researched 2026-07-14, primary sources; live-REPL confirmation pending auth)
+
+- GPT-5.6 family GA 2026-07-09: **`gpt-5.6-sol`** (flagship, $5/$30 per 1M) · `gpt-5.6-terra`
+  ($2.50/$15) · `gpt-5.6-luna` ($1/$6).
+- **"Sol Ultra" is not a model id** — it's `gpt-5.6-sol` with reasoning effort **`ultra`** (codex-cli
+  ≥0.144: `/model` picker or `model_reasoning_effort = "ultra"`; Plus plan+). Ultra = max reasoning +
+  automatic task delegation (parallel subagents) — budget-guard it. API analogue: `reasoning.mode:
+  "pro"`; the CLI↔API mapping is UNCONFIRMED.
+
+## Proxy routing (metering codex through a local proxy)
+
+- `~/.codex/config.toml` `[model_providers.<id>]` with `base_url` + `wire_api = "responses"` (the chat
+  wire was REMOVED Feb-2026 — any proxy must speak `/v1/responses`).
+- Built-in `openai` provider override is broken (codex issue #11698); use a custom provider id.
+- **ChatGPT-OAuth through a custom provider: UNVERIFIED, conflicting sources** — the decisive 15-minute
+  probe (post-login): custom provider with NO `env_key` → point at a logging proxy → inspect whether the
+  OAuth bearer + `ChatGPT-Account-ID` header arrive, and whether plan credits still apply. API-key mode
+  works unambiguously.
+- **Do NOT enable imaging for Sol** even when metering works: pxpipe's own FINDINGS.md (2026-07-09/11)
+  measured `gpt-5.6-sol` at 0/15 verbatim hex (confabulating) AND +32% token cost vs text on the OpenAI
+  lane. Sol lane = meter-only. (`PXPIPE_MODELS` family-matches suffixes — a bare `gpt-5.6` entry catches
+  `gpt-5.6-sol`; pin the allowlist explicitly.)
+
 ## Design consequence (the correction that triggered this file)
 
 An earlier draft of the codex skill variants assumed **no fork primitive** and prescribed context-bundle
