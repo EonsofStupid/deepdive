@@ -91,3 +91,13 @@ TESTING.md).
 - ⇒ pxpipe can meter codex **only under API-key (platform) billing**. Subscription/plan codex is
   unmeterable at the proxy seam today; use codex-native accounting instead (`/usage`,
   `/status`, and per-session token data in `~/.codex/sessions/**/rollout-*.jsonl`).
+
+## Linux sandbox edge case (hit live 2026-07-14)
+
+On Ubuntu 24.x with restricted unprivileged user namespaces, codex's bubblewrap sandbox fails at exec
+time with `bwrap: loopback: Failed RTM_NEWADDR` — the agent can reason but every shell/patch action
+fails ("Failed to apply patch"; forks report BLOCKED). Fixes: (a) box-level — allow unprivileged userns
+(`sysctl kernel.apparmor_restrict_unprivileged_userns=0`, needs root); (b) per-run —
+`-c 'sandbox_mode="danger-full-access"'` (appropriate only on dedicated/trusted boxes; pair with
+`-c 'approval_policy="never"'` for unattended forks). The startup warning "needs access to create user
+namespaces" is the early tell.
