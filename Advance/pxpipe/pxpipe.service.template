@@ -1,0 +1,13 @@
+[Unit]
+Description=pxpipe — token-metering/optical-compression proxy on 127.0.0.1:@PORT@
+After=network.target
+
+[Service]
+ExecStart=@NPX@ -y pxpipe-proxy
+Environment=PATH=@NODE_BIN_DIR@:/usr/bin:/bin
+Environment=PORT=@PORT@
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

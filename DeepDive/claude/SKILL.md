@@ -46,16 +46,12 @@ SOURCE ──┬─ identify the sub-topics (with the user)
 <skill-dir>/scripts/spawn-branch.sh <branch-id> "<topic>" <source-session-id> [--headless]
 ```
 tmux underneath always (durable; a closed window never kills work), optional GUI attach for discussion
-branches, full session capture to `${DEEPDIVE_HOME}/branches/<id>/`. If `PXPIPE_URL` is set the session
-routes through that proxy (token metering / optical compression); unset = direct.
+branches, full session capture to `${DEEPDIVE_HOME}/branches/<id>/`.
 
-## Optional signal emission
+## Power-ups
 
-If `DEEPDIVE_SIGNAL_CMD` is set (e.g. a CLI that records workflow telemetry), emit one line per lifecycle
-transition: `branch_opened · spur_dispatched · spur_folded · decision_established · notes_authored ·
-branch_closed · crystallized` (with `--branch <id>`, `--parent <src>`; superseding decisions add
-`--supersedes <prior>`). If the sink is busy, append the args to `${DEEPDIVE_HOME}/signal.queue` and replay
-later with `scripts/drain-queue.sh`. Unset = skip silently — the workflow works without telemetry.
+Token metering / optical compression (`PXPIPE_URL`) and lifecycle telemetry (`DEEPDIVE_SIGNAL_CMD`) are
+optional and documented once in the repo's `Advance/` folder — the skill works bare.
 
 ## Guardrails
 

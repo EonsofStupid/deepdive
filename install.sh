@@ -1,32 +1,41 @@
 #!/usr/bin/env bash
-# install.sh — install the DeepDive skills for your harness. The repo is the SSOT (copy, not symlink);
-# re-run after edits.
+# install.sh — install the DeepDive skills for your harness. Repo is the SSOT (copy, not symlink);
+# re-run after edits. Safe to pipe: curl -fsSL <raw-url>/install.sh | bash -s claude
 #
-# usage: ./install.sh [claude|codex|cursor|all]   (default: claude)
-#   claude → ~/.claude/skills/<skill>/            (SKILL.md + scripts; /deepdive, /rabbithole)
-#   codex  → ~/.codex/prompts/<skill>.md          (custom prompts; /deepdive, /rabbithole)
-#   cursor → <project>/.cursor/commands/          (pass the project dir as $2, default: cwd)
+# usage: ./install.sh [claude|codex|cursor|advance|all] [cursor-project-dir]
 set -euo pipefail
-cd "$(dirname "$0")"
+
+# Resolve repo root whether run from a checkout or piped (pipe → clone to a temp dir first).
+if [ -f "${BASH_SOURCE[0]:-}" ] 2>/dev/null && [ -d "$(dirname "${BASH_SOURCE[0]}")/DeepDive" ]; then
+  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+  ROOT="$(mktemp -d)/deepdive"
+  echo "installing from a fresh clone → $ROOT"
+  git clone -q --depth 1 https://github.com/EonsofStupid/deepdive "$ROOT"
+fi
+cd "$ROOT"
 TARGET="${1:-claude}"
-SKILLS=(deepdive rabbithole)
+
+# skill-name (lowercase, what you invoke) ↔ folder (repo casing)
+declare -A DIRS=( [deepdive]="DeepDive" [rabbithole]="RabbitHole" )
 
 install_claude() {
   mkdir -p "$HOME/.claude/skills"
-  for s in "${SKILLS[@]}"; do
+  for s in deepdive rabbithole; do
+    d="${DIRS[$s]}"
     rm -rf "$HOME/.claude/skills/$s"
     mkdir -p "$HOME/.claude/skills/$s"
-    cp "$s/claude/SKILL.md" "$HOME/.claude/skills/$s/SKILL.md"
-    cp -r "$s/scripts" "$HOME/.claude/skills/$s/scripts"
-    chmod +x "$HOME/.claude/skills/$s/scripts/"*.sh
+    cp "$d/claude/SKILL.md" "$HOME/.claude/skills/$s/SKILL.md"
+    [ -d "$d/scripts" ] && cp -r "$d/scripts" "$HOME/.claude/skills/$s/scripts" \
+      && chmod +x "$HOME/.claude/skills/$s/scripts/"*.sh
     echo "claude: installed /$s"
   done
 }
 
 install_codex() {
   mkdir -p "$HOME/.codex/prompts"
-  for s in "${SKILLS[@]}"; do
-    cp "$s/codex/$s.md" "$HOME/.codex/prompts/$s.md"
+  for s in deepdive rabbithole; do
+    cp "${DIRS[$s]}/codex/$s.md" "$HOME/.codex/prompts/$s.md"
     echo "codex: installed /$s (~/.codex/prompts/$s.md)"
   done
 }
@@ -34,19 +43,27 @@ install_codex() {
 install_cursor() {
   local proj="${2:-$PWD}"
   mkdir -p "$proj/.cursor/commands"
-  for s in "${SKILLS[@]}"; do
-    cp "$s/cursor/$s.md" "$proj/.cursor/commands/$s.md"
+  for s in deepdive rabbithole; do
+    cp "${DIRS[$s]}/cursor/$s.md" "$proj/.cursor/commands/$s.md"
     echo "cursor: installed /$s ($proj/.cursor/commands/$s.md)"
   done
-  echo "note: the bash scripts under <skill>/scripts are Claude-Code-oriented (true session forks);"
-  echo "      the cursor command files use context-bundle emulation and do not require them."
+}
+
+install_advance() {
+  mkdir -p "$HOME/.claude/hooks"
+  cp Advance/hooks/*.sh "$HOME/.claude/hooks/" && chmod +x "$HOME/.claude/hooks/"*.sh
+  echo "advance: hook scripts → ~/.claude/hooks/ (wire them per Advance/hooks/WIRING.md — settings.json is yours to edit)"
+  echo "advance: pxpipe proxy → run Advance/pxpipe/install-pxpipe.sh (optional; needs node >= 18)"
+  echo "advance: telemetry contract → Advance/telemetry/SIGNALS.md"
 }
 
 case "$TARGET" in
-  claude) install_claude ;;
-  codex)  install_codex ;;
-  cursor) install_cursor "$@" ;;
-  all)    install_claude; install_codex; echo "cursor is per-project: ./install.sh cursor <project-dir>" ;;
-  *) echo "usage: ./install.sh [claude|codex|cursor|all]" >&2; exit 1 ;;
+  claude)  install_claude ;;
+  codex)   install_codex ;;
+  cursor)  install_cursor "$@" ;;
+  advance) install_advance ;;
+  all)     install_claude; install_codex; install_advance
+           echo "cursor is per-project: ./install.sh cursor <project-dir>" ;;
+  *) echo "usage: ./install.sh [claude|codex|cursor|advance|all]" >&2; exit 1 ;;
 esac
 echo "done"

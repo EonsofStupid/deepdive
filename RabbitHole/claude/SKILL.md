@@ -24,7 +24,7 @@ SOURCE ──┬─ fork 1 (stance A) ─┐   every fork inherits the FULL sour
 1. **Forks inherit the source** — `claude --resume <source-session-id> --fork-session`, always. Source
    context is the feature. One question per rabbithole; forks differ by STANCE, not task.
 2. **Fully automated** — spawn, prompt-submit, watch, collect, gate: all machine-side.
-3. **Every fork is captured** (terminal recording + log) and, when `PXPIPE_URL` is set, token-metered.
+3. **Every fork is captured** (terminal recording + log).
 4. **The summary is BULLETS, not artifacts** — per fork: 4–6 bullets (what it did, how it differs,
    objective gate results, cost) + ONE advisory recommendation line. Raw diffs are available behind the
    pick, never the front door.
@@ -56,8 +56,12 @@ SOURCE ──┬─ fork 1 (stance A) ─┐   every fork inherits the FULL sour
    bullet sheet, composes the best elements into one solution with named provenance, runs the same gate,
    and re-enters the comparison as a new candidate — **it must win the pick, not win by default**. If its
    gate fails twice, present the originals and say so.
-7. Winner applied/merged only where the user says. Optional telemetry as in deepdive
-   (`DEEPDIVE_SIGNAL_CMD`; forks emit `branch_opened`/`branch_closed`, the winner `crystallized`).
+7. Winner applied/merged only where the user says.
+
+## Power-ups
+
+Token metering (`PXPIPE_URL`) and lifecycle telemetry (`DEEPDIVE_SIGNAL_CMD`) are optional and
+documented once in the repo's `Advance/` folder — the skill works bare.
 
 ## Guardrails
 
