@@ -24,8 +24,13 @@ paste. Their touchpoints: an optional mid-run rebuttal, and the final pick.
 ## Invariants
 
 1. **Forks inherit the source.** One question per rabbithole; forks differ by STANCE, not task.
-   Default N=3: build tasks → `minimal-surgical · robust-productionized · rethink-the-approach`;
-   research → `steelman · skeptic · lateral`.
+   **Minimum 2 candidates, normally 3** (build tasks → `minimal-surgical · robust-productionized ·
+   rethink-the-approach`; research → `steelman · skeptic · lateral`); more only when the user defines
+   or requests them.
+2. **The summary is a LAYMAN BULLETIN** — plain language a non-technical reader follows comfortably;
+   jargon, paths, and flag-soup stay out. Before presenting, run a series of internal YAGNI review
+   passes (minimum 10–15 seconds of genuine re-reading): strip overengineering from what's recommended,
+   cut bullet bloat, represent the simple option fairly.
 2. **Fully automated** — spawn, prompt, watch, collect, gate: all machine-side.
 3. **Isolation**: one git worktree per fork off the current commit when the task mutates a repo
    (`git worktree add <dir> HEAD`); scratch dirs under `${DEEPDIVE_HOME:-~/.deepdive}/rabbitholes/<id>/`

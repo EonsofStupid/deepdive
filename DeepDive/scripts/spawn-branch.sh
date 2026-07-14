@@ -42,6 +42,11 @@ fi
 tmux new-session -d -s "$TMUX_NAME" -x 220 -y 55 "$INNER"
 tmux pipe-pane -t "$TMUX_NAME" -o "cat >> '$CAP_DIR/pane.log'"
 
+# STAGE the sub-topic prompt (typed, NOT submitted) — the user presses Enter to begin the discussion.
+# Joining a conversation is a deliberate act; only machinery auto-submits.
+sleep 15
+tmux send-keys -t "$TMUX_NAME" -l "BRANCH ${BRANCH_ID} — sub-topic: ${TOPIC}. Work ONLY this sub-topic to a decision. Close contract: extend the decision notes with the user's own reasoning + write the build-plan notes before closing."
+
 if [ "$MODE" != "--headless" ]; then
   if [ -n "${DISPLAY:-}" ] && command -v gnome-terminal >/dev/null 2>&1; then
     gnome-terminal --title="deepdive branch: $TOPIC" -- tmux attach -t "$TMUX_NAME" &

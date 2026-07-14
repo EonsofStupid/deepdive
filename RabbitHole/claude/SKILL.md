@@ -25,12 +25,18 @@ SOURCE ──┬─ fork 1 (stance A) ─┐   every fork inherits the FULL sour
    context is the feature. One question per rabbithole; forks differ by STANCE, not task.
 2. **Fully automated** — spawn, prompt-submit, watch, collect, gate: all machine-side.
 3. **Every fork is captured** (terminal recording + log).
-4. **The summary is BULLETS, not artifacts** — per fork: 4–6 bullets (what it did, how it differs,
-   objective gate results, cost) + ONE advisory recommendation line. Raw diffs are available behind the
-   pick, never the front door.
-5. **The pick is forced and structured** — a single-select question: one option per fork, plus `Hybrid`
+4. **The summary is a LAYMAN BULLETIN, not artifacts** — per fork: 4–6 bullets in PLAIN LANGUAGE a
+   non-technical reader follows comfortably (what this take did, how it's different, whether it passed
+   its checks, roughly what it cost) + ONE advisory recommendation line. Jargon, file paths, and
+   flag-soup stay out of the bulletin; raw artifacts are available behind the pick, never the front door.
+5. **Minimum 2 candidates, normally 3** — more only when the user defines or requests them.
+6. **Internal YAGNI review before presenting** — a series of quick internal review passes (minimum
+   10–15 seconds of genuine re-reading, not a token pause) over both the candidates and the bulletin
+   itself: strip overengineering from what's recommended, cut bullet bloat, make sure the simple
+   option is fairly represented. The user should experience "exactly what I needed," never a wall.
+7. **The pick is forced and structured** — a single-select question: one option per fork, plus `Hybrid`
    and `Discard all`. No open-ended "thoughts?".
-6. **Ties, DNFs, and gate failures are reported as exactly that.**
+8. **Ties, DNFs, and gate failures are reported as exactly that.**
 
 ## Procedure
 

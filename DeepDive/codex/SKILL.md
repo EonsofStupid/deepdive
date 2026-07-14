@@ -15,8 +15,10 @@ confirms decisions; the machinery is invisible to them.
 
 ## Codex primitives this skill uses (verified on codex-cli 0.144.4)
 
-- **Branch** = `codex fork <SOURCE_SESSION_ID> "<branch prompt>"` from a terminal (true fork, prompt
-  auto-starts it), or in-TUI `/fork` for the current chat. Session ids live at
+- **Branch** = `codex fork <SOURCE_SESSION_ID>` from a terminal (true fork), or in-TUI `/fork`. For
+  DISCUSSION branches, fork WITHOUT the prompt argument and STAGE the sub-topic prompt in the composer
+  (typed, not submitted) — **the user presses Enter to begin**; the prompt-as-argument auto-start is for
+  machinery forks (rabbithole), not discussions. Session ids live at
   `~/.codex/sessions/YYYY/MM/DD/rollout-<ts>-<uuid>.jsonl` (`ls -t` for newest; `/status` shows the
   current one).
 - **Research spur** = `/side` (ephemeral fork side-conversation) inside a branch — findings fold into

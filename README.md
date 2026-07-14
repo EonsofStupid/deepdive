@@ -53,9 +53,12 @@ or from a checkout:
 ## Hard-won rules (all learned the expensive way)
 
 - **Forks inherit the source.** Context preservation is the point, not contamination to control away.
-- **Auto-submit everything.** If a human has to press Enter in N look-alike windows, the design is wrong.
+- **Machinery auto-submits; discussions are user-initiated.** RabbitHole's worker forks start
+  themselves — a human should never drive N look-alike windows. A DeepDive discussion branch opens with
+  its prompt STAGED and the user presses Enter: joining a conversation is a deliberate act.
 - **Completion = 3 minutes of idle** — never "an artifact exists" (fires early), never window state.
-- **Summaries are bullets + a forced pick** — never raw diffs and scoring rubrics.
+- **Summaries are layman bulletins + a forced pick** (min 2, normally 3 candidates; internal YAGNI
+  review before presenting) — never raw diffs and scoring rubrics.
 - **Every branch ends in a durable artifact** (notes/memory/diff): that's the fold's input contract.
 - **Objective gates run identically on every candidate**; ties, DNFs, and failures are reported as such.
 - A hybrid must **win the comparison on merit**, never by default.

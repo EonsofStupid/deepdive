@@ -30,8 +30,11 @@ SOURCE ──┬─ identify the sub-topics (with the user)
    notes for that decision are written. Messy is fine; unclosed is not.
 3. **Decisions are additive or superseding.** New facts append. A decision that overturns a prior one
    NAMES what it replaces — never silently edit history.
-4. **Sequential cadence.** Usually one active discussion branch (visible terminal — the user participates).
-   Deep research spurs may run headless underneath it and fold into that branch's notes.
+4. **Sequential cadence, USER-INITIATED.** Usually one active discussion branch: the terminal opens
+   VISIBLE with the sub-topic prompt STAGED but NOT submitted — **the user presses Enter to begin the
+   discussion** (joining a conversation is a deliberate act; only machinery auto-submits, and a
+   discussion branch is not machinery). Deep research spurs may run headless underneath it and fold
+   into that branch's notes.
 5. **The accumulator is files, not conversation**: one running notes doc + one forming summary, extended
    in place by every branch (default home: `${DEEPDIVE_HOME:-~/.deepdive}/dives/<dive-id>/`). Conversation
    history is expendable; the accumulator is not.
