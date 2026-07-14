@@ -1,47 +1,61 @@
 # DeepDive
 
-Claude Code skills + workflows for **conversation-forking as a design instrument** — spawn real forked
-sessions (full source context preserved), drive them to durable conclusions, fold results back. Built and
-dogfooded on a live Rust/AI-infrastructure project; every claim below was verified on a real box before it
-was written down.
+Two agent skills that treat **conversation-forking as a design instrument** — so one session never
+carries five tangled discussions, and non-technical users get parallel exploration without touching a
+terminal. Built and dogfooded on a live Rust/AI-infrastructure project; the embarrassing lessons are
+baked in as rules.
 
-**Why forks?** So one session never carries five tangled discussions — and so non-technical users get
-parallel exploration without ever touching a terminal: the machinery spawns, runs, collects, and summarizes
-itself. The human's job is decisions.
+## The two skills
 
-## The two variants
-
-| | **catamorph** (depth) | **rabbithole** (breadth) |
+| | **deepdive** (depth) | **rabbithole** (breadth) |
 |---|---|---|
-| Shape | sequential branches, ONE decision/subtopic each | N parallel forks attack the SAME question |
-| Ends with | terminal fold: one clean memory + build plan | bulleted comparison → forced pick (or automated best-of-each **hybrid**) |
+| Shape | sequential branches — ONE decision/subtopic per fork, full source context inherited | N parallel forks attack the SAME question, one stance each |
+| Ends with | every branch closes into decision notes + build notes → one terminal fold: a clean plan | bulleted comparison → **forced pick** — or an automated best-of-each **hybrid** that must win the pick on merit |
 | Use for | foundational multi-topic design | "try it 3 ways and show me" |
 
-Shared machinery: `claude --resume <src> --fork-session` under tmux (windows are disposable views; closing
-one never kills work) · asciinema + pane capture · idle-based completion detection · objective gates run
-identically on every candidate · optional [pxpipe](https://github.com/teamchong/pxpipe) routing for token
-metering/optical compression · typed lifecycle signals into a DuckDB warehouse.
+Each skill is fully self-contained and ships in three harness flavors:
+
+```
+deepdive/    claude/SKILL.md   cursor/deepdive.md    codex/deepdive.md    scripts/
+rabbithole/  claude/SKILL.md   cursor/rabbithole.md  codex/rabbithole.md  scripts/
+```
 
 ## Install
 
 ```bash
-./install.sh   # copies skills/* into ~/.claude/skills/
+./install.sh claude              # → ~/.claude/skills/        (/deepdive, /rabbithole)
+./install.sh codex               # → ~/.codex/prompts/        (/deepdive, /rabbithole)
+./install.sh cursor <project>    # → <project>/.cursor/commands/
 ```
 
-Then `/catamorph` or `/rabbithole <question> [--forks N] [--hybrid]` inside Claude Code.
+## The capability line, stated honestly
 
-## Hard-won rules baked in
+- **Claude Code** gets the full machinery: true conversation forks (`claude --resume <id>
+  --fork-session`) under tmux — durable sessions where a closed window never kills work — with
+  asciinema capture, idle-based completion detection, and optional
+  [pxpipe](https://github.com/teamchong/pxpipe) routing for per-request token metering.
+- **Cursor / Codex** have no conversation-fork primitive. Their variants use **context-bundle
+  emulation**: the source session exports a `CONTEXT.md` (objectives, decisions, open questions) and
+  every branch/fork starts by reading it. Same workflow, weaker inheritance — documented, not disguised.
 
-- **Forks inherit the source.** Context preservation is the point, not contamination.
-- **Auto-submit everything.** If the human has to press Enter in N windows, the design is wrong (we
-  learned this the embarrassing way, twice).
-- **Completion = 3 minutes of idle**, never "an artifact exists" (fires early) or window state.
-- **Summaries are bullets + a forced pick**, never raw diffs and scoring rubrics.
-- **Every branch ends in a durable artifact** (memory/notes/diff) — that's the fold's input contract.
-- Honest reporting: DNFs, gate failures, and ties are shown as what they are.
+## Hard-won rules (all learned the expensive way)
+
+- **Forks inherit the source.** Context preservation is the point, not contamination to control away.
+- **Auto-submit everything.** If a human has to press Enter in N look-alike windows, the design is wrong.
+- **Completion = 3 minutes of idle** — never "an artifact exists" (fires early), never window state.
+- **Summaries are bullets + a forced pick** — never raw diffs and scoring rubrics.
+- **Every branch ends in a durable artifact** (notes/memory/diff): that's the fold's input contract.
+- **Objective gates run identically on every candidate**; ties, DNFs, and failures are reported as such.
+- A hybrid must **win the comparison on merit**, never by default.
+
+## Optional telemetry
+
+Set `DEEPDIVE_SIGNAL_CMD` to any CLI that accepts lifecycle events (`branch_opened … crystallized`) and
+the skills will emit one line per transition (queueing to `${DEEPDIVE_HOME}/signal.queue` when the sink
+is busy; replay with `deepdive/scripts/drain-queue.sh`). Unset = silently skipped. `DEEPDIVE_HOME`
+defaults to `~/.deepdive`.
 
 ## Status
 
-Pre-release, extracted live from a working setup. Paths/assumptions from the origin box (systemd user
-services, pxpipe on `127.0.0.1:47821`, a DuckDB signal warehouse) are being generalized — read the scripts
-before running them on your machine.
+Pre-release. Extracted from a working setup and generalized (env-var paths, optional proxy/telemetry);
+scripts assume a Unix box with tmux. Issues and test reports welcome — that's what this repo is for.
