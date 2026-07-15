@@ -56,6 +56,14 @@ or from a checkout:
 - **Machinery auto-submits; discussions are user-initiated.** RabbitHole's worker forks start
   themselves — a human should never drive N look-alike windows. A DeepDive discussion branch opens with
   its prompt STAGED and the user presses Enter: joining a conversation is a deliberate act.
+- **The staged line is ONE short sentence; the task brief is a FILE.** A long staged prompt stops
+  reading as typed text — Claude Code's paste detection collapses it into a persistent attachment chip
+  and the press-Enter contract breaks (hit live 2026-07-14). Each branch gets a COSTAR brief file
+  (Context/Objective/Style/Tone/Audience/Response + close contract); the staged line points at it.
+  `spawn-branch.sh` now hard-fails on long topics.
+- **A branch that exits without its notes gets respawned, not skipped.** Auto-chaining verifies the
+  close contract in the accumulator files before the next branch spawns — proven under real failure
+  (a terminal closed early; the machinery re-opened the same branch).
 - **Completion = 3 minutes of idle** — never "an artifact exists" (fires early), never window state.
 - **Summaries are layman bulletins + a forced pick** (min 2, normally 3 candidates; internal YAGNI
   review before presenting) — never raw diffs and scoring rubrics.
@@ -72,12 +80,17 @@ defaults to `~/.deepdive`.
 
 ## Demos & results — real runs, never synthetic
 
-`demos/RESULTS.md` carries the numbers with receipts: the first end-to-end codex rabbithole (two true
-`gpt-5.6-sol` forks + a provenance-tagged hybrid that authored this repo's own release gate — and caught
-4 real doc bugs on the way), the typed-telemetry drain with its two *correct rejections*, the
-OAuth-vs-API-key proxy probe evidence, and the optical-compression vetting that pinned the allowlist.
+`demos/RESULTS.md` carries the numbers with receipts: the first end-to-end deepdive (four branch forks
+on a real system design — decisions, an approved plan, a built-and-benchmarked slice, and a failure
+receipt that became a rule), the first end-to-end codex rabbithole (two true `gpt-5.6-sol` forks + a
+provenance-tagged hybrid that authored this repo's own release gate — and caught 4 real doc bugs on
+the way), the typed-telemetry drain with its two *correct rejections*, the OAuth-vs-API-key proxy
+probe evidence, and the optical-compression vetting that pinned the allowlist.
 `demos/casts/` = asciinema replays of real forked Claude sessions; `demos/codex-sessions/` = the actual
 codex session rollouts, including the sandbox-blocked attempt we kept as an edge-case receipt.
+`demos/PAIRED_STUDY.md` = the stock-vs-advance comparison as actually run: identical objective gates,
+measured ties reported as ties, a named instrumentation gap instead of invented numbers, and blind
+scoring packs sealed for the operator.
 
 ## Related projects
 

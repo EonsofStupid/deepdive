@@ -12,6 +12,15 @@ TOPIC="${2:?missing <topic>}"
 PARENT_SESSION="${3:?missing <source-session-id> (the session to fork)}"
 MODE="${4:-visible}"
 
+# The staged line must read as TYPED text. A long topic trips the client's paste detection and
+# collapses into a persistent attachment chip instead of plain text (hit live 2026-07-14) — full
+# detail belongs in a per-branch COSTAR brief file; the topic is a one-line pointer at it.
+if [ "${#TOPIC}" -gt 160 ]; then
+  echo "ERROR: topic is ${#TOPIC} chars (max 160 — it gets STAGED as typed text)." >&2
+  echo "Put the full brief in a file and pass a pointer, e.g.: \"Read <dive>/briefs/${BRANCH_ID}.md (COSTAR brief) then begin\"" >&2
+  exit 1
+fi
+
 HOME_DIR="${DEEPDIVE_HOME:-$HOME/.deepdive}"
 TMUX_NAME="dd-${BRANCH_ID}"
 CAP_DIR="$HOME_DIR/branches/${BRANCH_ID}"

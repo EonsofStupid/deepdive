@@ -1,8 +1,50 @@
 # Real runs, real numbers — no synthetic tests, no mocks
 
-Everything here happened on the origin box (Linux aarch64, 2026-07-13/14) as **real pending work** — the
+Everything here happened on the origin box (Linux aarch64, 2026-07-13/15) as **real pending work** — the
 standing rule for this repo: a test that isn't also real work doesn't qualify. Replays in this folder are
 the actual sessions.
+
+## The first end-to-end deepdive (2026-07-14 → 15)
+
+**Task (real):** design the connection + session architecture for the operator's actual next build —
+how a desktop client talks to a local AI server over a fast encrypted channel, with server-owned
+sessions that survive client crashes. Four sub-topics, four decisions needed.
+
+**Mechanism:** one source conversation identified the topic; four sequential branch forks
+(`claude --resume <id> --fork-session`, full source context inherited) each worked ONE sub-topic to an
+operator-confirmed decision; the close contract (decision notes in the operator's own words + build
+notes, both verified by file inspection) gated every advance; a terminal fold reduced everything into
+one execution plan the operator approved.
+
+| Branch | Sub-topic | Wall time | Closed with | Replay |
+|---|---|---|---|---|
+| 1 | what "layer 2" concretely is | ~20 min | decision + 5 named killed candidates | `casts/dd-b1-l2-transport.cast` |
+| 2 | server-owned session model | ~13 min | decision (lifecycle, durability rules) | `casts/dd-b2-session-ownership.cast` |
+| 3 | client wire contract | overnight (incl. idle) | **an approved plan + a BUILT slice** — new wire-contract crate, 9 real endpoints, a 33-cell transport benchmark with honest numbers | `casts/dd-b3-client-contract.cast` |
+| 4 | deployment shape | ~8 min | decision (4 gate picks, 6 named kills) | `casts/dd-b4-deployment-shape.cast` |
+
+- **The chain ran itself.** Each branch exit auto-triggered the next spawn — but only after the
+  machinery verified the close contract in the notes files. One branch terminal closed early WITHOUT
+  its notes written: the machinery respawned the SAME branch instead of skipping ahead. The contract
+  held under failure, which is the point.
+- **Skills composed mid-branch.** Branch 3 invoked the planning skill inside its fork, got an
+  operator-approved plan, and executed a real slice of it — then refused to reward-hack its own
+  benchmark: loopback showed TCP at 257 Gbit/s vs QUIC at 5–8 (loopback TCP is a memory copy, not a
+  wire), so the run flagged its own pass criterion as structurally unpassable and re-anchored the gate
+  to per-link-tier measurements instead of shipping a fake green.
+- **Memory evolved per close.** A dive memory file was extended at every branch close and finalized at
+  the fold — the next session recalls the decisions without replaying anything.
+- Human touchpoints: pressed Enter to join each of 4 discussions, confirmed each close, made the
+  design picks, approved 2 plans. Zero context pasted, zero terminals babysat.
+- Accumulator receipts (origin box): `~/.deepdive/dives/devpulse-l2-session/` — 379-line decision log,
+  4 named supersessions in the fold, 9 typed fold signals in the warehouse.
+
+**Failure kept as a receipt (it produced a rule):** the first branch spawn staged a ~900-character
+topic via `tmux send-keys` — Claude Code's paste detection collapsed it into a persistent
+`[Pasted text]` attachment chip instead of plainly-typed text, breaking the press-Enter contract. The
+fix that then ran clean for all four branches: **full task detail goes in a per-branch COSTAR brief
+file; the staged line is ONE short sentence pointing at it.** Now baked into the skill and
+`spawn-branch.sh` (see Hard-won rules).
 
 ## The first end-to-end codex rabbithole (2026-07-14)
 
@@ -64,6 +106,16 @@ but scores **0/15 on verbatim 12-char hex — confabulating values** — and cos
 on the OpenAI lane. Verdict: Sol lane = meter-only, never compress. Fable remains the only
 imaging-allowlisted model (`PXPIPE_MODELS=claude-fable-5`, pinned explicitly in the shipped unit
 template because the matcher family-matches suffixes).
+
+## The paired study — stock vs advance (as-run, honest)
+
+The head-to-head this repo owes its readers now has a live record: **`demos/PAIRED_STUDY.md`** —
+protocol as actually run, 2 of 6 real task pairs executed, objective gates run identically on every
+candidate (all four candidates pass; the gates alone don't separate the arms), active time a
+measured TIE on both pairs, one instrumentation defect stated instead of papered over (per-arm cost
+unrecoverable — the proxy never wrote `cwd`; fix filed), and blind X/Y quality packs sealed for
+operator scoring (the original t1 pack was sealed before one arm finished — caught, regenerated
+from finals). Small N, stated plainly. The four casts below are those runs.
 
 ## Claude-side forked-session replays
 

@@ -35,6 +35,12 @@ SOURCE ──┬─ identify the sub-topics (with the user)
    discussion** (joining a conversation is a deliberate act; only machinery auto-submits, and a
    discussion branch is not machinery). Deep research spurs may run headless underneath it and fold
    into that branch's notes.
+   **The staged line must be ONE short sentence.** Full task detail goes in a per-branch BRIEF file
+   (COSTAR: Context/Objective/Style/Tone/Audience/Response-with-close-contract) under the dive's
+   `briefs/` folder; the staged line just points at it ("Read <brief path> then begin"). Learned the
+   expensive way: a long staged string trips the client's paste detection and collapses into a
+   persistent attachment chip instead of plainly-typed text — the press-Enter contract breaks.
+   `spawn-branch.sh` now refuses topics that would stage long.
 5. **The accumulator is files, not conversation**: one running notes doc + one forming summary, extended
    in place by every branch (default home: `${DEEPDIVE_HOME:-~/.deepdive}/dives/<dive-id>/`). Conversation
    history is expendable; the accumulator is not.
@@ -49,7 +55,13 @@ SOURCE ──┬─ identify the sub-topics (with the user)
 <skill-dir>/scripts/spawn-branch.sh <branch-id> "<topic>" <source-session-id> [--headless]
 ```
 tmux underneath always (durable; a closed window never kills work), optional GUI attach for discussion
-branches, full session capture to `${DEEPDIVE_HOME}/branches/<id>/`.
+branches, full session capture to `${DEEPDIVE_HOME}/branches/<id>/`. Keep `<topic>` a short one-liner
+pointing at the branch's COSTAR brief file (invariant 4) — the script hard-fails on long topics.
+
+**Auto-chaining (proven pattern):** to run branches hands-off in sequence, arm a watcher on the
+branch's tmux session; when it ends, VERIFY the close contract in the accumulator files (grep the
+branch's section into existence) before spawning the next branch — if the contract is unmet, respawn
+the SAME branch, never skip ahead. A killed watcher is harmless: tmux keeps the branch alive; re-arm.
 
 ## Power-ups
 

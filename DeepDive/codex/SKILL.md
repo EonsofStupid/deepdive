@@ -18,7 +18,9 @@ confirms decisions; the machinery is invisible to them.
 - **Branch** = `codex fork <SOURCE_SESSION_ID>` from a terminal (true fork), or in-TUI `/fork`. For
   DISCUSSION branches, fork WITHOUT the prompt argument and STAGE the sub-topic prompt in the composer
   (typed, not submitted) — **the user presses Enter to begin**; the prompt-as-argument auto-start is for
-  machinery forks (rabbithole), not discussions. Session ids live at
+  machinery forks (rabbithole), not discussions. Keep the staged line ONE short sentence pointing at a
+  per-branch COSTAR brief file with the full task detail — long staged text stops reading as typed
+  input (Claude Code collapses it into a paste chip; hit live 2026-07-14; same rule here defensively). Session ids live at
   `~/.codex/sessions/YYYY/MM/DD/rollout-<ts>-<uuid>.jsonl` (`ls -t` for newest; `/status` shows the
   current one).
 - **Research spur** = `/side` (ephemeral fork side-conversation) inside a branch — findings fold into
